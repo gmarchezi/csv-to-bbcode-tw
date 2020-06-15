@@ -92,13 +92,66 @@ def CSV_to_HoF(lista_entrada):
     arquivo_saida.close()
 
 
+#Recebe uma lista de lista, contendo os elementos do CSV de entrada e tem como saída um arquivo .txt contendo a tabela em BBCode
+#Tabela RANK DE APOIO PREVENTIVO
+def CSV_to_RankApoio(lista_entrada):
+    data_atual = date.today()
+    data_atual_str = data_atual.strftime('%d-%m-%Y')
+    nome_arquivo = 'Tabela_RANK_' + data_atual_str +'.txt'
+    arquivo_saida = open(nome_arquivo,'w')
+    arquivo_saida.write('[table]\n')
+    arquivo_saida.write('[**]')
+
+    for x in range(len(lista_entrada[0])):
+        if x < len(lista_entrada[0])-1:
+            arquivo_saida.write(lista_entrada[0][x]+'[||]')
+        else:
+            arquivo_saida.write(lista_entrada[0][x]+'[/**]\n')
+            del(lista_entrada[0])
+
+    for i in range(len(lista_entrada)):
+        arquivo_saida.write('[*]')
+        contador = 0
+        for y in range(len(lista_entrada[0])):
+            if y < len(lista_entrada[0])-1:
+                if contador == 0:
+                    if int(lista_entrada[i][y]) >=1 and int(lista_entrada[i][y]) <=10:
+                        cor = '#2eb92e'
+                    elif int(lista_entrada[i][y]) >=11 and int(lista_entrada[i][y]) <=20:
+                        cor = '#b9b92e'
+                    elif int(lista_entrada[i][y]) >=21:
+                        cor = '#b92e2e'
+
+                    if int(lista_entrada[i][y]) == 1:
+                        pos = 'st'
+                    elif int(lista_entrada[i][y]) == 2:
+                        pos = 'nd'
+                    elif int(lista_entrada[i][y]) == 3:
+                        pos = 'rd'
+                    else:
+                        pos = 'th'
+
+                    arquivo_saida.write('[b][color='+cor+']'+lista_entrada[i][y]+pos+'[/color][/b]'+'[|]')
+
+                else:
+                    arquivo_saida.write('[player]'+lista_entrada[i][y]+'[/player]'+'[|]')
+            else:
+                arquivo_saida.write('[b]'+lista_entrada[i][y]+'[/b]'+'\n')
+            contador = contador + 1
+
+    arquivo_saida.write('[/table]')
+    arquivo_saida.close()
+
+
 def main():
     lista_entrada = Ler_CSV(sys.argv[1],sys.argv[2])
-    menu = input('1. Tabela Genérica\n2. Tabela HALL OF FAME \nDigite:')
+    menu = input('1. Tabela Genérica\n2. Tabela HALL OF FAME \n3. Tabela Rank de APOIO \nDigite:')
     if menu == '1':
         CSV_to_BBCode(lista_entrada)
     elif menu == '2':
         CSV_to_HoF(lista_entrada)
+    elif menu == '3':
+        CSV_to_RankApoio(lista_entrada)
 
 
 
